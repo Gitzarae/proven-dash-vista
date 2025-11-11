@@ -1,178 +1,120 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Shield, LogIn } from 'lucide-react';
 import { toast } from 'sonner';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [role, setRole] = useState<UserRole>('project_manager');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, signup } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    try {
-      const { error } = await login(email, password);
-      if (error) {
-        toast.error(error.message || 'Login failed');
-      } else {
-        toast.success('Login successful');
-        navigate('/dashboard');
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'Login failed');
-    } finally {
-      setIsLoading(false);
+    
+    if (!email || !password) {
+      toast.error('Please fill in all fields');
+      return;
     }
-  };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
     setIsLoading(true);
     try {
-      const { error } = await signup(email, password, name, role);
-      if (error) {
-        toast.error(error.message || 'Signup failed');
-      } else {
-        toast.success('Account created successfully!');
-        navigate('/dashboard');
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'Signup failed');
+      await login(email, password, role);
+      toast.success('Login successful');
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <div className="w-full max-w-md">
-        {/* Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 mb-4">
+        {/* Logo and Title */}
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
             <Shield className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">PROVEN</h1>
-          <p className="text-muted-foreground">Governance Platform for GRA</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">PROVEN</h1>
+          <p className="text-muted-foreground">Governance Platform</p>
+          <p className="text-sm text-muted-foreground mt-1">Ghana Revenue Authority</p>
         </div>
 
-        {/* Auth Forms */}
-        <div className="glass rounded-2xl p-8">
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
+        {/* Login Form */}
+        <div className="glass rounded-2xl p-8 shadow-xl animate-fade-in">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@gra.gov.gh"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-background/50"
+                required
+              />
+            </div>
 
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="your.email@gra.gov.gh"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-background/50"
-                  />
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-background/50"
+                required
+              />
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="bg-background/50"
-                  />
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">Select Role (Testing)</Label>
+              <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
+                <SelectTrigger className="bg-background/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="top_management">Top Management</SelectItem>
+                  <SelectItem value="project_owner">Project Owner (PO)</SelectItem>
+                  <SelectItem value="project_manager">Project Manager (PM)</SelectItem>
+                  <SelectItem value="project_officer">Project Officer</SelectItem>
+                  <SelectItem value="system_admin">System Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">For prototype testing purposes</p>
+            </div>
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Signing in...' : 'Sign In'}
-                </Button>
-              </form>
-            </TabsContent>
+            <Button 
+              type="submit" 
+              className="w-full transition-smooth hover:glow-green"
+              disabled={isLoading}
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </form>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="bg-background/50"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="your.email@gra.gov.gh"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-background/50"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="bg-background/50"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-role">Role</Label>
-                  <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
-                    <SelectTrigger className="bg-background/50">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="top_management">Top Management</SelectItem>
-                      <SelectItem value="project_owner">Project Owner</SelectItem>
-                      <SelectItem value="project_manager">Project Manager</SelectItem>
-                      <SelectItem value="project_officer">Project Officer</SelectItem>
-                      <SelectItem value="system_admin">System Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Creating account...' : 'Create Account'}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <div className="mt-6 pt-6 border-t border-border/50">
+            <p className="text-center text-sm text-muted-foreground">
+              Demo credentials: Use any email/password with selected role
+            </p>
+          </div>
         </div>
+
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          © 2025 Ghana Revenue Authority. All rights reserved.
+        </p>
       </div>
     </div>
   );
