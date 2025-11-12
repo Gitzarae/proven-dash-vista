@@ -31,13 +31,20 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
     { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 
-  // Show audit for system admin
+  // Show admin-only items for system admin
   if (user?.role === 'system_admin') {
-    navItems.splice(6, 0, { 
-      icon: Shield, 
-      label: 'Audit Logs', 
-      path: '/audit' 
-    });
+    navItems.splice(6, 0, 
+      { 
+        icon: Users, 
+        label: 'User Management', 
+        path: '/user-management' 
+      },
+      { 
+        icon: Shield, 
+        label: 'Audit Logs', 
+        path: '/audit' 
+      }
+    );
   }
 
   return (

@@ -19,6 +19,7 @@ import Meetings from "./pages/Meetings";
 import Analytics from "./pages/Analytics";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
+import UserManagement from "./pages/UserManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ const AppRoutes = () => {
         <Route path="meetings" element={<Meetings />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
+        <Route path="user-management" element={<UserManagement />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 
