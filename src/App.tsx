@@ -7,7 +7,17 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import LoginPage from "./components/auth/LoginPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
+import TopManagementDashboard from "./pages/dashboards/TopManagementDashboard";
+import ProjectOwnerDashboard from "./pages/dashboards/ProjectOwnerDashboard";
+import ProjectManagerDashboard from "./pages/dashboards/ProjectManagerDashboard";
+import ProjectOfficerDashboard from "./pages/dashboards/ProjectOfficerDashboard";
+import AdminDashboard from "./pages/dashboards/AdminDashboard";
+import Portfolio from "./pages/Portfolio";
+import Decisions from "./pages/Decisions";
+import Issues from "./pages/Issues";
+import Meetings from "./pages/Meetings";
+import Analytics from "./pages/Analytics";
+import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -45,12 +55,17 @@ const AppRoutes = () => {
         }
       >
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="projects" element={<Projects />} />
-        <Route path="meetings" element={<Projects />} />
-        <Route path="issues" element={<Projects />} />
-        <Route path="decisions" element={<Projects />} />
-        <Route path="analytics" element={<Projects />} />
-        <Route path="audit" element={<Projects />} />
+        <Route path="dashboard/top-management" element={<TopManagementDashboard />} />
+        <Route path="dashboard/project-owner" element={<ProjectOwnerDashboard />} />
+        <Route path="dashboard/project-manager" element={<ProjectManagerDashboard />} />
+        <Route path="dashboard/project-officer" element={<ProjectOfficerDashboard />} />
+        <Route path="dashboard/admin" element={<AdminDashboard />} />
+        <Route path="portfolio" element={<Portfolio />} />
+        <Route path="decisions" element={<Decisions />} />
+        <Route path="issues" element={<Issues />} />
+        <Route path="meetings" element={<Meetings />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="notifications" element={<Notifications />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 

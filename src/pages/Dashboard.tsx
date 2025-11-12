@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import KPICard from '@/components/dashboard/KPICard';
 import { 
   FolderKanban, 
@@ -26,6 +28,20 @@ import {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role) {
+      const roleRoutes: Record<string, string> = {
+        'top_management': '/dashboard/top-management',
+        'project_owner': '/dashboard/project-owner',
+        'project_manager': '/dashboard/project-manager',
+        'project_officer': '/dashboard/project-officer',
+        'system_admin': '/dashboard/admin',
+      };
+      navigate(roleRoutes[user.role] || '/dashboard');
+    }
+  }, [user, navigate]);
 
   // Mock data for charts
   const performanceData = [
