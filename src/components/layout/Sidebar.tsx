@@ -23,7 +23,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: FolderKanban, label: 'Projects', path: '/projects' },
+    { icon: FolderKanban, label: 'Portfolio', path: '/portfolio' },
     { icon: Users, label: 'Meetings', path: '/meetings' },
     { icon: AlertCircle, label: 'Issues', path: '/issues' },
     { icon: CheckCircle, label: 'Decisions', path: '/decisions' },
@@ -101,7 +101,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
                 <p className="font-medium truncate">{user.name}</p>
                 <p className="text-muted-foreground text-xs truncate">{user.email}</p>
                 <p className="text-primary text-xs mt-1 capitalize">
-                  {user.role.replace('_', ' ')}
+                  {user.role ? user.role.replace('_', ' ') : 'guest'}
                 </p>
               </div>
             </div>
