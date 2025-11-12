@@ -1,17 +1,17 @@
-import { NavLink } from '@/components/NavLink';
-import { useAuth } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  FolderKanban, 
-  Users, 
-  AlertCircle, 
-  CheckCircle, 
-  BarChart3, 
+import { NavLink } from "@/components/NavLink";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  LayoutDashboard,
+  FolderKanban,
+  Users,
+  AlertCircle,
+  CheckCircle,
+  BarChart3,
   Settings,
   ChevronLeft,
-  Shield
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+  Shield,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -22,27 +22,29 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const { user } = useAuth();
 
   const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: FolderKanban, label: 'Portfolio', path: '/portfolio' },
-    { icon: Users, label: 'Meetings', path: '/meetings' },
-    { icon: AlertCircle, label: 'Issues', path: '/issues' },
-    { icon: CheckCircle, label: 'Decisions', path: '/decisions' },
-    { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+    { icon: Users, label: "Meetings", path: "/meetings" },
+    { icon: AlertCircle, label: "Issues", path: "/issues" },
+    { icon: CheckCircle, label: "Decisions", path: "/decisions" },
+    { icon: BarChart3, label: "Analytics", path: "/analytics" },
+    { icon: Settings, label: "User", path: "/user-management" },
+    { icon: Settings, label: "Settings", path: "/settings" },
   ];
 
-  // Show admin-only items for system admin
-  if (user?.role === 'system_admin') {
-    navItems.splice(6, 0, 
-      { 
-        icon: Users, 
-        label: 'User Management', 
-        path: '/user-management' 
+  if (user?.role === "system_admin") {
+    navItems.splice(
+      6,
+      0,
+      {
+        icon: Users,
+        label: "User Management",
+        path: "/user-management",
       },
-      { 
-        icon: Shield, 
-        label: 'Audit Logs', 
-        path: '/audit' 
+      {
+        icon: Shield,
+        label: "Audit Logs",
+        path: "/audit",
       }
     );
   }
@@ -51,7 +53,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
     <>
       {/* Backdrop for mobile */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={onToggle}
         />
@@ -79,10 +81,12 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
               onClick={onToggle}
               className="p-2 rounded-lg hover:bg-muted transition-smooth hidden lg:flex"
             >
-              <ChevronLeft className={cn(
-                "w-5 h-5 transition-transform",
-                !isOpen && "rotate-180"
-              )} />
+              <ChevronLeft
+                className={cn(
+                  "w-5 h-5 transition-transform",
+                  !isOpen && "rotate-180"
+                )}
+              />
             </button>
           </div>
 
@@ -106,9 +110,11 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
             <div className="p-4 border-t border-border">
               <div className="text-sm">
                 <p className="font-medium truncate">{user.name}</p>
-                <p className="text-muted-foreground text-xs truncate">{user.email}</p>
+                <p className="text-muted-foreground text-xs truncate">
+                  {user.email}
+                </p>
                 <p className="text-primary text-xs mt-1 capitalize">
-                  {user.role ? user.role.replace('_', ' ') : 'guest'}
+                  {user.role ? user.role.replace("_", " ") : "guest"}
                 </p>
               </div>
             </div>

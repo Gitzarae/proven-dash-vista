@@ -54,9 +54,9 @@ const Dashboard = () => {
   ];
 
   const decisionData = [
-    { name: 'Closed', value: 156, color: 'hsl(var(--gra-green))' },
-    { name: 'Pending', value: 42, color: 'hsl(var(--gra-gold))' },
-    { name: 'Overdue', value: 12, color: 'hsl(var(--gra-red))' },
+    { name: 'Closed', value: 156, color: 'hsl(var(--primary) / 0.85)' },
+    { name: 'Pending', value: 42, color: 'hsl(var(--primary) / 0.55)' },
+    { name: 'Overdue', value: 12, color: 'hsl(var(--primary) / 0.30)' },
   ];
 
   const issueAgingData = [
@@ -160,20 +160,8 @@ const Dashboard = () => {
                 }}
               />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="spi" 
-                stroke="hsl(var(--gra-green))" 
-                strokeWidth={2}
-                name="SPI"
-              />
-              <Line 
-                type="monotone" 
-                dataKey="cpi" 
-                stroke="hsl(var(--gra-gold))" 
-                strokeWidth={2}
-                name="CPI"
-              />
+              <Line type="monotone" dataKey="spi" stroke="hsl(var(--primary) / 0.85)" strokeWidth={2} name="SPI" />
+              <Line type="monotone" dataKey="cpi" stroke="hsl(var(--primary) / 0.45)" strokeWidth={2} name="CPI" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -226,9 +214,9 @@ const Dashboard = () => {
               }}
             />
             <Legend />
-            <Bar dataKey="0-7 days" stackId="a" fill="hsl(var(--gra-green))" />
-            <Bar dataKey="8-14 days" stackId="a" fill="hsl(var(--gra-gold))" />
-            <Bar dataKey="15+ days" stackId="a" fill="hsl(var(--gra-red))" />
+            <Bar dataKey="0-7 days" stackId="a" fill="hsl(var(--primary) / 0.75)" />
+            <Bar dataKey="8-14 days" stackId="a" fill="hsl(var(--primary) / 0.50)" />
+            <Bar dataKey="15+ days" stackId="a" fill="hsl(var(--primary) / 0.30)" />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -257,7 +245,7 @@ const Dashboard = () => {
                   <td className="py-3 px-4 text-sm">{item.project}</td>
                   <td className="py-3 px-4 text-sm">{item.type}</td>
                   <td className="py-3 px-4">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
+                    <span className={`inline-flex items-center gap-1 whitespace-nowrap text-xs px-2 py-1 rounded-full ${
                       item.status === 'Closed' || item.status === 'Completed' 
                         ? 'bg-gra-green/10 text-gra-green' 
                         : item.status === 'Open' 
