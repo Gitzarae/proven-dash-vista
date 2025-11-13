@@ -1,72 +1,20 @@
-import { useState, useEffect } from 'react';
 import KPICard from '@/components/dashboard/KPICard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FolderKanban, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
 
 const ProjectOwnerDashboard = () => {
-  const { user } = useAuth();
-  const [myProjectsCount, setMyProjectsCount] = useState(0);
-  const [pendingApprovalsCount, setPendingApprovalsCount] = useState(0);
-  const [linkedDecisionsCount, setLinkedDecisionsCount] = useState(0);
-  const [activeIssuesCount, setActiveIssuesCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const myProjects = [
+    { id: 'PRJ-001', name: 'Tax Modernization', status: 'On Track', progress: 75, decisions: 5, issues: 2 },
+    { id: 'PRJ-002', name: 'Digital Services Platform', status: 'At Risk', progress: 62, decisions: 3, issues: 5 },
+    { id: 'PRJ-003', name: 'Revenue Analytics', status: 'On Track', progress: 88, decisions: 2, issues: 1 },
+  ];
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      if (!user) return;
-
-      try {
-        setLoading(true);
-
-        // Fetch my projects (where user is owner)
-        const { count: projectsCount, error: projectsError } = await supabase
-          .from('projects')
-          .select('*', { count: 'exact', head: true })
-          .eq('owner_id', user.id);
-
-        if (projectsError) throw projectsError;
-        setMyProjectsCount(projectsCount || 0);
-
-        // Fetch pending approvals (decisions pending)
-        const { count: approvalsCount, error: approvalsError } = await supabase
-          .from('decisions')
-          .select('*', { count: 'exact', head: true })
-          .eq('owner_id', user.id)
-          .eq('status', 'pending');
-
-        if (approvalsError) throw approvalsError;
-        setPendingApprovalsCount(approvalsCount || 0);
-
-        // Fetch linked decisions
-        const { count: decisionsCount, error: decisionsError } = await supabase
-          .from('decisions')
-          .select('*', { count: 'exact', head: true })
-          .eq('owner_id', user.id);
-
-        if (decisionsError) throw decisionsError;
-        setLinkedDecisionsCount(decisionsCount || 0);
-
-        // Fetch active issues
-        const { count: issuesCount, error: issuesError } = await supabase
-          .from('issues')
-          .select('*', { count: 'exact', head: true })
-          .neq('status', 'resolved');
-
-        if (issuesError) throw issuesError;
-        setActiveIssuesCount(issuesCount || 0);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, [user]);
+  const pendingApprovals = [
+    { id: 'DEC-045', title: 'Budget Reallocation for Q2', project: 'Tax Modernization', priority: 'critical', daysRemaining: 2 },
+    { id: 'DEC-046', title: 'Vendor Contract Extension', project: 'Digital Services', priority: 'high', daysRemaining: 5 },
+  ];
 
   return (
     <div className="space-y-6">
@@ -79,7 +27,7 @@ const ProjectOwnerDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
           title="My Projects"
-          value={loading ? '...' : myProjectsCount}
+          value={3}
           change="Active projects"
           changeType="neutral"
           icon={FolderKanban}
@@ -87,7 +35,7 @@ const ProjectOwnerDashboard = () => {
         />
         <KPICard
           title="Pending Approvals"
-          value={loading ? '...' : pendingApprovalsCount}
+          value={2}
           change="Require action"
           changeType="neutral"
           icon={Clock}
@@ -95,7 +43,7 @@ const ProjectOwnerDashboard = () => {
         />
         <KPICard
           title="Linked Decisions"
-          value={loading ? '...' : linkedDecisionsCount}
+          value={10}
           change="Total decisions"
           changeType="neutral"
           icon={CheckCircle}
@@ -103,7 +51,7 @@ const ProjectOwnerDashboard = () => {
         />
         <KPICard
           title="Active Issues"
-          value={loading ? '...' : activeIssuesCount}
+          value={8}
           change="Require attention"
           changeType="neutral"
           icon={AlertCircle}
@@ -119,31 +67,63 @@ const ProjectOwnerDashboard = () => {
             <Button variant="link" className="text-primary">View All →</Button>
           </Link>
         </div>
-        {myProjectsCount === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No projects assigned yet</p>
-        ) : (
-          <p className="text-center text-muted-foreground py-8">
-            You have {myProjectsCount} active {myProjectsCount === 1 ? 'project' : 'projects'}.{' '}
-            <Link to="/portfolio" className="text-primary underline">
-              View Portfolio
-            </Link>
-          </p>
-        )}
+        <div className="space-y-4">
+          {myProjects.map((project) => (
+            <div key={project.id} className="p-4 border border-border rounded-lg hover:border-primary/50 transition-smooth">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <h4 className="font-semibold">{project.name}</h4>
+                  <p className="text-sm text-muted-foreground">{project.id}</p>
+                </div>
+                <Badge variant={project.status === 'On Track' ? 'default' : 'destructive'}>
+                  {project.status}
+                </Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Progress</span>
+                  <span className="font-medium">{project.progress}%</span>
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full bg-gra-green transition-all"
+                    style={{ width: `${project.progress}%` }}
+                  />
+                </div>
+                <div className="flex gap-4 mt-3">
+                  <span className="text-sm text-muted-foreground">{project.decisions} decisions</span>
+                  <span className="text-sm text-muted-foreground">{project.issues} issues</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pending Approvals */}
       <div className="glass-hover rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-6">Pending Approvals</h3>
-        {pendingApprovalsCount === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No pending approvals</p>
-        ) : (
-          <p className="text-center text-muted-foreground py-8">
-            You have {pendingApprovalsCount} pending {pendingApprovalsCount === 1 ? 'approval' : 'approvals'}.{' '}
-            <Link to="/decisions" className="text-primary underline">
-              Review Decisions
-            </Link>
-          </p>
-        )}
+        <div className="space-y-4">
+          {pendingApprovals.map((approval) => (
+            <div key={approval.id} className="p-4 border border-border rounded-lg hover:border-primary/50 transition-smooth">
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1">
+                  <h4 className="font-semibold mb-1">{approval.title}</h4>
+                  <p className="text-sm text-muted-foreground mb-2">{approval.project}</p>
+                  <div className="flex gap-2">
+                    <Badge variant={approval.priority === 'critical' ? 'destructive' : 'default'}>
+                      {approval.priority}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">{approval.daysRemaining} days remaining</span>
+                  </div>
+                </div>
+                <Link to="/decisions">
+                  <Button size="sm">Review & Approve</Button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Issue Summary */}
@@ -151,21 +131,21 @@ const ProjectOwnerDashboard = () => {
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-semibold text-destructive">Critical</h4>
-            <span className="text-2xl font-bold">0</span>
+            <span className="text-2xl font-bold">2</span>
           </div>
           <p className="text-sm text-muted-foreground">Require escalation</p>
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-semibold text-gra-gold">High Priority</h4>
-            <span className="text-2xl font-bold">0</span>
+            <span className="text-2xl font-bold">4</span>
           </div>
           <p className="text-sm text-muted-foreground">Needs attention</p>
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-semibold text-gra-green">Resolved</h4>
-            <span className="text-2xl font-bold">0</span>
+            <span className="text-2xl font-bold">12</span>
           </div>
           <p className="text-sm text-muted-foreground">This month</p>
         </div>

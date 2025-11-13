@@ -1,89 +1,34 @@
-import { useState, useEffect } from 'react';
 import KPICard from '@/components/dashboard/KPICard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Users, Activity, FolderKanban, FileText } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-
-interface RoleCount {
-  role: string;
-  count: number;
-}
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [totalProjects, setTotalProjects] = useState(0);
-  const [auditLogCount, setAuditLogCount] = useState(0);
-  const [roleCounts, setRoleCounts] = useState<RoleCount[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchParams] = useSearchParams();
+  const roleDistribution = [
+    { role: 'Top Management', active: 5, total: 6 },
+    { role: 'Project Owner', active: 12, total: 15 },
+    { role: 'Project Manager', active: 18, total: 20 },
+    { role: 'Project Officer', active: 45, total: 50 },
+    { role: 'System Admin', active: 3, total: 3 },
+  ];
 
-  const roleDisplayMap: Record<string, string> = {
-    'top_management': 'Top Management',
-    'project_owner': 'Project Owner',
-    'project_manager': 'Project Manager',
-    'project_officer': 'Project Officer',
-    'system_admin': 'System Admin',
+  const recentActivities = [
+    { user: 'John Doe', action: 'Created new project: Tax Modernization', timestamp: '2025-01-12 10:30 AM', type: 'project' },
+    { user: 'Jane Smith', action: 'Approved decision DEC-045', timestamp: '2025-01-12 09:15 AM', type: 'decision' },
+    { user: 'Mike Johnson', action: 'Resolved issue ISS-123', timestamp: '2025-01-12 08:45 AM', type: 'issue' },
+    { user: 'System', action: 'Automated backup completed', timestamp: '2025-01-12 02:00 AM', type: 'system' },
+  ];
+
+  const getActivityColor = (type: string) => {
+    switch (type) {
+      case 'project': return 'bg-gra-green';
+      case 'decision': return 'bg-gra-gold';
+      case 'issue': return 'bg-destructive';
+      case 'system': return 'bg-primary';
+      default: return 'bg-muted';
+    }
   };
-
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-
-        // Fetch total users
-        const { count: usersCount, error: usersError } = await supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true });
-
-        if (usersError) throw usersError;
-        setTotalUsers(usersCount || 0);
-
-        // Fetch total projects
-        const { count: projectsCount, error: projectsError } = await supabase
-          .from('projects')
-          .select('*', { count: 'exact', head: true });
-
-        if (projectsError) throw projectsError;
-        setTotalProjects(projectsCount || 0);
-
-        // Fetch audit logs count
-        const { count: logsCount, error: logsError } = await supabase
-          .from('audit_logs')
-          .select('*', { count: 'exact', head: true });
-
-        if (logsError) throw logsError;
-        setAuditLogCount(logsCount || 0);
-
-        // Fetch user counts by role
-        const { data: rolesData, error: rolesError } = await supabase
-          .from('user_roles')
-          .select('role');
-
-        if (rolesError) throw rolesError;
-
-        // Count users by role
-        const counts: Record<string, number> = {};
-        rolesData?.forEach(item => {
-          counts[item.role] = (counts[item.role] || 0) + 1;
-        });
-
-        const roleCountsArray = Object.entries(counts).map(([role, count]) => ({
-          role,
-          count,
-        }));
-
-        setRoleCounts(roleCountsArray);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
 
   return (
     <div className="space-y-6">
@@ -96,9 +41,9 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
           title="Total Users"
-          value={loading ? '...' : totalUsers}
-          change={`${totalUsers} registered`}
-          changeType="neutral"
+          value={156}
+          change="85 active"
+          changeType="positive"
           icon={Users}
           colorClass="text-primary"
         />
@@ -112,7 +57,7 @@ const AdminDashboard = () => {
         />
         <KPICard
           title="Total Projects"
-          value={loading ? '...' : totalProjects}
+          value={24}
           change="Active projects"
           changeType="neutral"
           icon={FolderKanban}
@@ -120,8 +65,8 @@ const AdminDashboard = () => {
         />
         <KPICard
           title="Audit Logs"
-          value={loading ? '...' : auditLogCount}
-          change="Total entries"
+          value={1247}
+          change="This month"
           changeType="neutral"
           icon={FileText}
           colorClass="text-gra-gold"
@@ -132,66 +77,98 @@ const AdminDashboard = () => {
       <div className="glass-hover rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">User Role Distribution</h3>
-          <Link to="/user-management">
-            <Button variant="outline" size="sm">Manage Users</Button>
-          </Link>
+          <Button variant="outline" size="sm">Manage Users</Button>
         </div>
         <div className="space-y-4">
-          {loading ? (
-            <p className="text-center text-muted-foreground py-8">Loading...</p>
-          ) : roleCounts.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">No users yet</p>
-          ) : (
-            roleCounts.map((item) => (
-              <Link
-                key={item.role}
-                to={`/user-management?role=${item.role}`}
-                className="flex items-center justify-between p-3 border border-border rounded-lg hover:border-primary/50 transition-smooth"
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <span className="font-medium">{roleDisplayMap[item.role] || item.role}</span>
-                  <Badge variant="outline">{item.count} {item.count === 1 ? 'user' : 'users'}</Badge>
-                </div>
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="flex-1">
-                    <div className="w-full bg-secondary rounded-full h-2">
-                      <div 
-                        className="h-2 rounded-full bg-gra-green transition-all"
-                        style={{ width: `${Math.min((item.count / totalUsers) * 100, 100)}%` }}
-                      />
-                    </div>
+          {roleDistribution.map((item) => (
+            <div key={item.role} className="flex items-center justify-between">
+              <div className="flex items-center gap-3 flex-1">
+                <span className="font-medium">{item.role}</span>
+                <Badge variant="outline">{item.active} active</Badge>
+              </div>
+              <div className="flex items-center gap-4 flex-1">
+                <div className="flex-1">
+                  <div className="w-full bg-secondary rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full bg-gra-green transition-all"
+                      style={{ width: `${(item.active / item.total) * 100}%` }}
+                    />
                   </div>
-                  <span className="text-sm text-muted-foreground w-16 text-right">
-                    {((item.count / totalUsers) * 100).toFixed(0)}%
-                  </span>
                 </div>
-              </Link>
-            ))
-          )}
+                <span className="text-sm text-muted-foreground w-16 text-right">
+                  {item.active} / {item.total}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent System Activities */}
+      <div className="glass-hover rounded-xl p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold">Recent System Activities</h3>
+          <Button variant="outline" size="sm">View All Logs</Button>
+        </div>
+        <div className="space-y-3">
+          {recentActivities.map((activity, index) => (
+            <div key={index} className="flex items-start gap-3 p-3 border border-border rounded-lg hover:border-primary/50 transition-smooth">
+              <div className={`w-2 h-2 rounded-full mt-2 ${getActivityColor(activity.type)}`} />
+              <div className="flex-1">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-medium text-sm">{activity.user}</p>
+                    <p className="text-sm text-muted-foreground">{activity.action}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Administration Tools */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Button variant="outline" className="h-20" asChild>
-          <Link to="/user-management">
+          <Link to="/data-management">
             <div className="text-center">
-              <div className="font-semibold">User Management</div>
-              <div className="text-xs text-muted-foreground">Add, edit, or remove users</div>
+              <div className="font-semibold">Data Management</div>
+              <div className="text-xs text-muted-foreground">Import/Export data</div>
             </div>
           </Link>
         </Button>
-        <Button variant="outline" className="h-20" disabled>
+        <Button variant="outline" className="h-20">
+          <div className="text-center">
+            <div className="font-semibold">User Management</div>
+            <div className="text-xs text-muted-foreground">Manage user accounts</div>
+          </div>
+        </Button>
+        <Button variant="outline" className="h-20">
           <div className="text-center">
             <div className="font-semibold">System Settings</div>
             <div className="text-xs text-muted-foreground">Configure system</div>
           </div>
         </Button>
-        <Button variant="outline" className="h-20" disabled>
+        <Button variant="outline" className="h-20">
+          <div className="text-center">
+            <div className="font-semibold">Role & Permissions</div>
+            <div className="text-xs text-muted-foreground">Manage access control</div>
+          </div>
+        </Button>
+        <Button variant="outline" className="h-20">
           <div className="text-center">
             <div className="font-semibold">Audit Logs</div>
             <div className="text-xs text-muted-foreground">View system logs</div>
           </div>
+        </Button>
+        <Button variant="outline" className="h-20" asChild>
+          <Link to="/notifications">
+            <div className="text-center">
+              <div className="font-semibold">Notification Settings</div>
+              <div className="text-xs text-muted-foreground">Configure alerts</div>
+            </div>
+          </Link>
         </Button>
       </div>
     </div>

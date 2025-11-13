@@ -1,46 +1,26 @@
-import { useState, useEffect } from 'react';
 import KPICard from '@/components/dashboard/KPICard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FolderKanban, Clock, CheckCircle, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
 
 const ProjectOfficerDashboard = () => {
-  const { user } = useAuth();
-  const [assignedProjects, setAssignedProjects] = useState(0);
-  const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const assignedProjects = [
+    { id: 'PRJ-001', name: 'Tax Modernization', deliverables: 5, completed: 3, progress: 60, dueDate: '2025-01-30' },
+    { id: 'PRJ-002', name: 'Digital Services Platform', deliverables: 8, completed: 5, progress: 62, dueDate: '2025-02-15' },
+  ];
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      if (!user) return;
+  const pendingDeliverables = [
+    { id: 'DEL-001', title: 'Monthly Status Report', project: 'Tax Modernization', status: 'in-progress', dueDate: '2025-01-15' },
+    { id: 'DEL-002', title: 'Risk Assessment Document', project: 'Digital Services', status: 'pending', dueDate: '2025-01-18' },
+    { id: 'DEL-003', title: 'Testing Results Summary', project: 'Tax Modernization', status: 'in-progress', dueDate: '2025-01-20' },
+  ];
 
-      try {
-        setLoading(true);
-
-        // Fetch assigned projects (placeholder - would need a project_assignments table)
-        setAssignedProjects(0);
-
-        // Fetch unread notifications
-        const { count: notifCount, error: notifError } = await supabase
-          .from('notifications')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.id)
-          .eq('read', false);
-
-        if (notifError) throw notifError;
-        setUnreadNotifications(notifCount || 0);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, [user]);
+  const notifications = [
+    { id: 'N-001', message: 'New task assigned: Complete security audit', date: '2025-01-12', read: false },
+    { id: 'N-002', message: 'Deliverable DEL-001 is due in 3 days', date: '2025-01-12', read: false },
+    { id: 'N-003', message: 'Meeting scheduled for 2025-01-14 at 10:00 AM', date: '2025-01-11', read: true },
+  ];
 
   return (
     <div className="space-y-6">
@@ -53,7 +33,7 @@ const ProjectOfficerDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <KPICard
           title="Assigned Projects"
-          value={loading ? '...' : assignedProjects}
+          value={2}
           change="Active assignments"
           changeType="neutral"
           icon={FolderKanban}
@@ -61,7 +41,7 @@ const ProjectOfficerDashboard = () => {
         />
         <KPICard
           title="Pending Deliverables"
-          value={loading ? '...' : 0}
+          value={3}
           change="Require action"
           changeType="neutral"
           icon={Clock}
@@ -69,7 +49,7 @@ const ProjectOfficerDashboard = () => {
         />
         <KPICard
           title="Completed"
-          value={loading ? '...' : 0}
+          value={8}
           change="Deliverables"
           changeType="positive"
           icon={CheckCircle}
@@ -77,7 +57,7 @@ const ProjectOfficerDashboard = () => {
         />
         <KPICard
           title="Notifications"
-          value={loading ? '...' : unreadNotifications}
+          value={1}
           change="Unread"
           changeType="neutral"
           icon={Bell}
@@ -88,7 +68,34 @@ const ProjectOfficerDashboard = () => {
       {/* My Assigned Projects */}
       <div className="glass-hover rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-6">My Assigned Projects</h3>
-        <p className="text-center text-muted-foreground py-8">No projects assigned yet</p>
+        <div className="space-y-4">
+          {assignedProjects.map((project) => (
+            <div key={project.id} className="p-4 border border-border rounded-lg hover:border-primary/50 transition-smooth">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <h4 className="font-semibold">{project.name}</h4>
+                  <p className="text-sm text-muted-foreground">{project.id}</p>
+                </div>
+                <Badge>
+                  {project.deliverables} deliverables
+                </Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Progress</span>
+                  <span className="font-medium">{project.completed} / {project.deliverables} completed</span>
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full bg-gra-green transition-all"
+                    style={{ width: `${project.progress}%` }}
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Due: {project.dueDate}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pending Deliverables */}
@@ -97,7 +104,23 @@ const ProjectOfficerDashboard = () => {
           <h3 className="text-lg font-semibold">Pending Deliverables</h3>
           <Button size="sm">Submit</Button>
         </div>
-        <p className="text-center text-muted-foreground py-8">No pending deliverables</p>
+        <div className="space-y-4">
+          {pendingDeliverables.map((deliverable) => (
+            <div key={deliverable.id} className="p-4 border border-border rounded-lg hover:border-primary/50 transition-smooth">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h4 className="font-semibold mb-1">{deliverable.title}</h4>
+                  <p className="text-sm text-muted-foreground mb-2">{deliverable.project}</p>
+                  <div className="flex gap-2">
+                    <Badge variant="outline">{deliverable.status}</Badge>
+                    <span className="text-sm text-muted-foreground">Due: {deliverable.dueDate}</span>
+                  </div>
+                </div>
+                <Button size="sm" variant="outline">Upload</Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Notifications */}
@@ -108,16 +131,28 @@ const ProjectOfficerDashboard = () => {
             <Button variant="link" className="text-primary">View All →</Button>
           </Link>
         </div>
-        {unreadNotifications === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No new notifications</p>
-        ) : (
-          <p className="text-center text-muted-foreground py-8">
-            You have {unreadNotifications} unread {unreadNotifications === 1 ? 'notification' : 'notifications'}.{' '}
-            <Link to="/notifications" className="text-primary underline">
-              View All
-            </Link>
-          </p>
-        )}
+        <div className="space-y-3">
+          {notifications.map((notification) => (
+            <div 
+              key={notification.id} 
+              className={`p-4 border rounded-lg transition-smooth ${
+                notification.read 
+                  ? 'border-border hover:border-primary/50' 
+                  : 'border-primary bg-primary/5'
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-sm mb-1">{notification.message}</p>
+                  <span className="text-xs text-muted-foreground">{notification.date}</span>
+                </div>
+                {!notification.read && (
+                  <Badge variant="default" className="ml-2">New</Badge>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
