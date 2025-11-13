@@ -126,51 +126,7 @@ const AdminDashboard = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Administration Tools */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Button variant="outline" className="h-20" asChild>
-          <Link to="/data-management">
-            <div className="text-center">
-              <div className="font-semibold">Data Management</div>
-              <div className="text-xs text-muted-foreground">Import/Export data</div>
-            </div>
-          </Link>
-        </Button>
-        <Button variant="outline" className="h-20">
-          <div className="text-center">
-            <div className="font-semibold">User Management</div>
-            <div className="text-xs text-muted-foreground">Manage user accounts</div>
-          </div>
-        </Button>
-        <Button variant="outline" className="h-20">
-          <div className="text-center">
-            <div className="font-semibold">System Settings</div>
-            <div className="text-xs text-muted-foreground">Configure system</div>
-          </div>
-        </Button>
-        <Button variant="outline" className="h-20">
-          <div className="text-center">
-            <div className="font-semibold">Role & Permissions</div>
-            <div className="text-xs text-muted-foreground">Manage access control</div>
-          </div>
-        </Button>
-        <Button variant="outline" className="h-20">
-          <div className="text-center">
-            <div className="font-semibold">Audit Logs</div>
-            <div className="text-xs text-muted-foreground">View system logs</div>
-          </div>
-        </Button>
-        <Button variant="outline" className="h-20" asChild>
-          <Link to="/notifications">
-            <div className="text-center">
-              <div className="font-semibold">Notification Settings</div>
-              <div className="text-xs text-muted-foreground">Configure alerts</div>
-            </div>
-          </Link>
-        </Button>
-      </div>
+      </div>     
     </div>
   );
 };
