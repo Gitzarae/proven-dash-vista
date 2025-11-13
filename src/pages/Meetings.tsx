@@ -144,7 +144,7 @@ const Meetings = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <CheckCircle className="w-8 h-8 text-gra-green" />
+            <CheckCircle className="w-8 h-8 text-gra-yellow" />
             <span className="text-3xl font-bold">{stats.notes}</span>
           </div>
           <h3 className="font-semibold">Notes Captured</h3>
@@ -179,12 +179,12 @@ const Meetings = () => {
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Badge>{meeting.type}</Badge>
                   {meeting.agendaReady && (
-                    <Badge variant="outline" className="border-gra-green text-gra-green">
+                    <Badge variant="outline" className="border-gra-navy text-gra-navy">
                       Agenda Ready
                     </Badge>
                   )}
                   {meeting.notesCaptured && (
-                    <Badge variant="outline" className="border-gra-green text-gra-green">
+                    <Badge variant="outline" className="border-gra-yellow text-gra-yellow">
                       Notes Captured
                     </Badge>
                   )}

@@ -186,7 +186,7 @@ const Issues = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <AlertCircle className="w-8 h-8 text-gra-green" />
+            <AlertCircle className="w-8 h-8 text-gra-navy" />
             <span className="text-3xl font-bold">{stats.slaAdherence}%</span>
           </div>
           <h3 className="font-semibold">SLA Adherence</h3>

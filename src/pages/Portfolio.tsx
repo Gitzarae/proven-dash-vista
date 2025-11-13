@@ -201,8 +201,8 @@ const Portfolio = () => {
                         <span className="font-medium">{project.progress}%</span>
                       </div>
                       <div className="w-32 bg-secondary rounded-full h-2">
-                        <div 
-                          className="h-2 rounded-full bg-gra-green transition-all"
+                      <div 
+                        className="h-2 rounded-full bg-gra-navy transition-all"
                           style={{ width: `${project.progress}%` }}
                         />
                       </div>
@@ -256,9 +256,9 @@ const Portfolio = () => {
                               <div className="flex justify-between text-sm">
                                 <span className="font-medium">{project.progress}%</span>
                               </div>
-                              <div className="w-full bg-secondary rounded-full h-2">
-                                <div 
-                                  className="h-2 rounded-full bg-gra-green transition-all"
+                            <div className="w-full bg-secondary rounded-full h-2">
+                              <div 
+                                className="h-2 rounded-full bg-gra-navy transition-all"
                                   style={{ width: `${project.progress}%` }}
                                 />
                               </div>

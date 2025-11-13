@@ -47,7 +47,7 @@ const ProjectOwnerDashboard = () => {
           change="Total decisions"
           changeType="neutral"
           icon={CheckCircle}
-          colorClass="text-gra-green"
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="Active Issues"
@@ -86,7 +86,7 @@ const ProjectOwnerDashboard = () => {
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div 
-                    className="h-2 rounded-full bg-gra-green transition-all"
+                    className="h-2 rounded-full bg-gra-navy transition-all"
                     style={{ width: `${project.progress}%` }}
                   />
                 </div>
@@ -144,7 +144,7 @@ const ProjectOwnerDashboard = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="font-semibold text-gra-green">Resolved</h4>
+            <h4 className="font-semibold text-gra-navy">Resolved</h4>
             <span className="text-2xl font-bold">12</span>
           </div>
           <p className="text-sm text-muted-foreground">This month</p>

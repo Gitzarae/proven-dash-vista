@@ -27,7 +27,7 @@ const ProjectCard = ({ project, onEdit }: ProjectCardProps) => {
 
   const statusColors: Record<string, string> = {
     planning: 'bg-blue-500/10 text-blue-500',
-    active: 'bg-gra-green/10 text-gra-green',
+    active: 'bg-gra-navy/10 text-gra-navy',
     on_hold: 'bg-gra-gold/10 text-gra-gold',
     completed: 'bg-purple-500/10 text-purple-500',
     cancelled: 'bg-gra-red/10 text-gra-red'

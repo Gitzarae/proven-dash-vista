@@ -13,7 +13,7 @@ const TopManagementDashboard = () => {
   ];
 
   const projectStatusData = [
-    { name: 'On Track', value: 18, color: 'hsl(var(--gra-green))' },
+    { name: 'On Track', value: 18, color: 'hsl(var(--gra-navy))' },
     { name: 'At Risk', value: 5, color: 'hsl(var(--gra-gold))' },
     { name: 'Critical', value: 1, color: 'hsl(var(--gra-red))' },
   ];
@@ -61,7 +61,7 @@ const TopManagementDashboard = () => {
           change="Target: 95%"
           changeType="positive"
           icon={TrendingUp}
-          colorClass="text-gra-green"
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="Decision Closure"
@@ -77,7 +77,7 @@ const TopManagementDashboard = () => {
           change="Target: 80%"
           changeType="positive"
           icon={AlertCircle}
-          colorClass="text-gra-green"
+          colorClass="text-gra-yellow"
         />
       </div>
 
@@ -96,7 +96,7 @@ const TopManagementDashboard = () => {
               <YAxis stroke="hsl(var(--muted-foreground))" style={{ fontSize: '12px' }} />
               <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
               <Legend />
-              <Bar dataKey="projects" fill="hsl(var(--gra-green))" name="Projects" />
+              <Bar dataKey="projects" fill="hsl(var(--gra-navy))" name="Projects" />
               <Bar dataKey="budget" fill="hsl(var(--gra-gold))" name="Budget (GH₵M)" />
             </BarChart>
           </ResponsiveContainer>
@@ -144,7 +144,7 @@ const TopManagementDashboard = () => {
               </div>
               <div className="w-full bg-secondary rounded-full h-2">
                 <div 
-                  className="h-2 rounded-full bg-gra-green transition-all"
+                  className="h-2 rounded-full bg-gra-navy transition-all"
                   style={{ width: `${dept.completion}%` }}
                 />
               </div>

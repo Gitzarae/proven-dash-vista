@@ -77,7 +77,7 @@ const Decisions = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return 'text-gra-green';
+      case 'approved': return 'text-gra-navy';
       case 'pending': return 'text-gra-gold';
       case 'overdue': return 'text-destructive';
       default: return 'text-muted-foreground';
@@ -151,7 +151,7 @@ const Decisions = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <CheckCircle className="w-8 h-8 text-gra-green" />
+            <CheckCircle className="w-8 h-8 text-gra-navy" />
             <span className="text-3xl font-bold">{stats.approved}</span>
           </div>
           <h3 className="font-semibold">Approved</h3>
@@ -299,7 +299,7 @@ const Decisions = () => {
 
         <TabsContent value="approved" className="space-y-4 mt-6">
           {decisions.filter(d => d.status === 'approved').map((decision) => (
-            <div key={decision.id} className="glass-hover rounded-xl p-6 border-l-4 border-gra-green">
+            <div key={decision.id} className="glass-hover rounded-xl p-6 border-l-4 border-gra-navy">
               <h3 className="text-lg font-semibold mb-2">{decision.title}</h3>
               <p className="text-sm text-muted-foreground mb-4">{decision.description}</p>
               <div className="flex items-center justify-between">

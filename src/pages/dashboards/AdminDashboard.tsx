@@ -22,7 +22,7 @@ const AdminDashboard = () => {
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case 'project': return 'bg-gra-green';
+      case 'project': return 'bg-gra-navy';
       case 'decision': return 'bg-gra-gold';
       case 'issue': return 'bg-destructive';
       case 'system': return 'bg-primary';
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
           change="Last 30 days"
           changeType="positive"
           icon={Activity}
-          colorClass="text-gra-green"
+          colorClass="text-gra-yellow"
         />
         <KPICard
           title="Total Projects"
@@ -90,7 +90,7 @@ const AdminDashboard = () => {
                 <div className="flex-1">
                   <div className="w-full bg-secondary rounded-full h-2">
                     <div 
-                      className="h-2 rounded-full bg-gra-green transition-all"
+                      className="h-2 rounded-full bg-gra-navy transition-all"
                       style={{ width: `${(item.active / item.total) * 100}%` }}
                     />
                   </div>

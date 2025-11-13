@@ -19,9 +19,13 @@ All colors MUST be HSL.
     --popover-foreground: 0 0% 20%;
 
     /* GRA Brand Colors */
-    --gra-green: 154 100% 21%;
+    --gra-navy: 220 75% 22%;
+    --gra-yellow: 45 94% 55%;
+    --gra-gold: 45 94% 55%;
+    --gra-red: 8 78% 52%;
+    --gra-green: var(--gra-navy);
 
-    --primary: 154 100% 21%;
+    --primary: var(--gra-navy);
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%;
@@ -30,7 +34,7 @@ All colors MUST be HSL.
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 154 100% 21%;
+    --accent: var(--gra-yellow);
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 0% 40%;
@@ -38,7 +42,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 154 100% 21%;
+    --ring: var(--gra-navy);
 
     --radius: 0.75rem;
     
@@ -48,7 +52,7 @@ All colors MUST be HSL.
     --glass-shadow: 0 8px 32px 0 rgb(31 38 135 / 0.15);
     
     /* Chart colors */
-    --chart-1: 154 100% 21%;
+    --chart-1: var(--gra-navy);
     --chart-2: 0 0% 60%;
     --chart-3: 0 0% 50%;
     --chart-4: 0 0% 40%;
@@ -81,7 +85,7 @@ All colors MUST be HSL.
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 154 100% 21%;
+    --primary: var(--gra-navy);
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 15%;
@@ -90,7 +94,7 @@ All colors MUST be HSL.
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 154 100% 21%;
+    --accent: var(--gra-yellow);
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 0% 50%;
@@ -98,7 +102,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 154 100% 21%;
+    --ring: var(--gra-navy);
     
     --glass-bg: 0 0% 12% / 0.7;
     --glass-border: 0 0% 100% / 0.1;
@@ -151,6 +155,6 @@ All colors MUST be HSL.
   
   /* Glow effect */
   .glow-green {
-    box-shadow: 0 0 20px hsl(var(--gra-green) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--gra-navy) / 0.3);
   }
 }

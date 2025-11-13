@@ -53,7 +53,7 @@ const ProjectOfficerDashboard = () => {
           change="Deliverables"
           changeType="positive"
           icon={CheckCircle}
-          colorClass="text-gra-green"
+          colorClass="text-gra-yellow"
         />
         <KPICard
           title="Notifications"
@@ -87,7 +87,7 @@ const ProjectOfficerDashboard = () => {
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div 
-                    className="h-2 rounded-full bg-gra-green transition-all"
+                    className="h-2 rounded-full bg-gra-navy transition-all"
                     style={{ width: `${project.progress}%` }}
                   />
                 </div>

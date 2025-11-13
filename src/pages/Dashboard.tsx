@@ -115,7 +115,7 @@ const Dashboard = () => {
           change="74% closure rate"
           changeType="positive"
           icon={CheckCircle}
-          colorClass="text-gra-green"
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="SLA Compliance"
@@ -247,7 +247,7 @@ const Dashboard = () => {
                   <td className="py-3 px-4">
                     <span className={`inline-flex items-center gap-1 whitespace-nowrap text-xs px-2 py-1 rounded-full ${
                       item.status === 'Closed' || item.status === 'Completed' 
-                        ? 'bg-gra-green/10 text-gra-green' 
+                        ? 'bg-gra-navy/10 text-gra-navy' 
                         : item.status === 'Open' 
                         ? 'bg-destructive/10 text-destructive'
                         : 'bg-gra-gold/10 text-gra-gold'

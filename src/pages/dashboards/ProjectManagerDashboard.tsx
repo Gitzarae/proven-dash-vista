@@ -53,7 +53,7 @@ const ProjectManagerDashboard = () => {
           change="Target: 80%"
           changeType="positive"
           icon={TrendingUp}
-          colorClass="text-gra-green"
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="Upcoming Meetings"
@@ -92,7 +92,7 @@ const ProjectManagerDashboard = () => {
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div 
-                    className="h-2 rounded-full bg-gra-green transition-all"
+                    className="h-2 rounded-full bg-gra-navy transition-all"
                     style={{ width: `${milestone.progress}%` }}
                   />
                 </div>
