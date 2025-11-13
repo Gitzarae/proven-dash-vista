@@ -1,20 +1,25 @@
-import { useState } from 'react';
-import { useAuth, UserRole } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from "react";
+import { useAuth, UserRole } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // logo will be loaded from public/logo.png
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState<UserRole>('project_manager');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<UserRole>("project_manager");
   const [isLoading, setIsLoading] = useState(false);
   const { login, signup } = useAuth();
   const navigate = useNavigate();
@@ -25,13 +30,13 @@ const LoginPage = () => {
     try {
       const { error } = await login(email, password);
       if (error) {
-        toast.error(error.message || 'Login failed');
+        toast.error(error.message || "Login failed");
       } else {
-        toast.success('Login successful');
-        navigate('/dashboard');
+        toast.success("Login successful");
+        navigate("/dashboard");
       }
     } catch (error: any) {
-      toast.error(error.message || 'Login failed');
+      toast.error(error.message || "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -43,13 +48,13 @@ const LoginPage = () => {
     try {
       const { error } = await signup(email, password, name, role);
       if (error) {
-        toast.error(error.message || 'Signup failed');
+        toast.error(error.message || "Signup failed");
       } else {
-        toast.success('Account created successfully!');
-        navigate('/dashboard');
+        toast.success("Account created successfully!");
+        navigate("/dashboard");
       }
     } catch (error: any) {
-      toast.error(error.message || 'Signup failed');
+      toast.error(error.message || "Signup failed");
     } finally {
       setIsLoading(false);
     }
@@ -61,10 +66,15 @@ const LoginPage = () => {
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-xl mb-4 overflow-hidden">
-            <img src="/logo.png" alt="PROVEN" className="w-full h-full object-contain" onError={(e) => {
-              const el = e.currentTarget as HTMLImageElement;
-              el.style.display = 'none';
-            }} />
+            <img
+              src="/logo.png"
+              alt="PROVEN"
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                const el = e.currentTarget as HTMLImageElement;
+                el.style.display = "none";
+              }}
+            />
           </div>
           <h1 className="text-3xl font-bold mb-2">PROVEN</h1>
           <p className="text-muted-foreground">Governance Platform for GRA</p>
@@ -107,7 +117,7 @@ const LoginPage = () => {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Signing in...' : 'Sign In'}
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
             </TabsContent>
@@ -156,22 +166,33 @@ const LoginPage = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="signup-role">Role</Label>
-                  <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
+                  <Select
+                    value={role}
+                    onValueChange={(value) => setRole(value as UserRole)}
+                  >
                     <SelectTrigger className="bg-background/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="top_management">Top Management</SelectItem>
-                      <SelectItem value="project_owner">Project Owner</SelectItem>
-                      <SelectItem value="project_manager">Project Manager</SelectItem>
-                      <SelectItem value="project_officer">Project Officer</SelectItem>
+                      <SelectItem value="top_management">
+                        Top Management
+                      </SelectItem>
+                      <SelectItem value="project_owner">
+                        Project Owner
+                      </SelectItem>
+                      <SelectItem value="project_manager">
+                        Project Manager
+                      </SelectItem>
+                      <SelectItem value="project_officer">
+                        Project Officer
+                      </SelectItem>
                       <SelectItem value="system_admin">System Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Creating account...' : 'Create Account'}
+                  {isLoading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>
             </TabsContent>

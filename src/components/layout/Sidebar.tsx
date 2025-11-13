@@ -23,10 +23,10 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   // Role-based navigation items
   const getNavItems = () => {
     const role = user?.role;
-    
+
     // All roles see Dashboard
     const items = [
-      { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" }
+      { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     ];
 
     switch (role) {
@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: Users, label: "Meetings", path: "/meetings" }
         );
         break;
-      
+
       case "project_owner":
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
-      
+
       case "project_manager":
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
@@ -59,18 +59,20 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
-      
+
       case "project_officer":
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
-      
+
       case "system_admin":
-        items.push(
-          { icon: Users, label: "User Management", path: "/user-management" }
-        );
+        items.push({
+          icon: Users,
+          label: "User Management",
+          path: "/user-management",
+        });
         break;
     }
 
@@ -102,10 +104,15 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
             {isOpen && (
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/logo.png" alt="PROVEN" className="w-full h-full object-contain" onError={(e) => {
-                    const el = e.currentTarget as HTMLImageElement;
-                    el.style.display = 'none';
-                  }}/>
+                  <img
+                    src="/logo.png"
+                    alt="PROVEN"
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      const el = e.currentTarget as HTMLImageElement;
+                      el.style.display = "none";
+                    }}
+                  />
                 </div>
                 <span className="font-bold text-lg">PROVEN</span>
               </div>
@@ -128,7 +135,10 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
             {isLoading ? (
               <div className="space-y-2">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="h-9 rounded-md bg-muted animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-9 rounded-md bg-muted animate-pulse"
+                  />
                 ))}
               </div>
             ) : (
