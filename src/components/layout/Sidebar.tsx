@@ -7,9 +7,9 @@ import {
   AlertCircle,
   CheckCircle,
   BarChart3,
-  Settings,
   ChevronLeft,
   Shield,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,33 +21,60 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
   const { user } = useAuth();
 
-  const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-    { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
-    { icon: Users, label: "Meetings", path: "/meetings" },
-    { icon: AlertCircle, label: "Issues", path: "/issues" },
-    { icon: CheckCircle, label: "Decisions", path: "/decisions" },
-    { icon: BarChart3, label: "Analytics", path: "/analytics" },
-    { icon: Settings, label: "User", path: "/user-management" },
-    { icon: Settings, label: "Settings", path: "/settings" },
-  ];
+  // Role-based navigation items
+  const getNavItems = () => {
+    const role = user?.role;
+    
+    // All roles see Dashboard
+    const items = [
+      { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" }
+    ];
 
-  if (user?.role === "system_admin") {
-    navItems.splice(
-      6,
-      0,
-      {
-        icon: Users,
-        label: "User Management",
-        path: "/user-management",
-      },
-      {
-        icon: Shield,
-        label: "Audit Logs",
-        path: "/audit",
-      }
-    );
-  }
+    switch (role) {
+      case "top_management":
+        items.push(
+          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+          { icon: CheckCircle, label: "Decisions", path: "/decisions" },
+          { icon: AlertCircle, label: "Issues", path: "/issues" },
+          { icon: BarChart3, label: "Analytics", path: "/analytics" },
+          { icon: Users, label: "Meetings", path: "/meetings" }
+        );
+        break;
+      
+      case "project_owner":
+        items.push(
+          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+          { icon: CheckCircle, label: "Decisions", path: "/decisions" },
+          { icon: AlertCircle, label: "Issues", path: "/issues" },
+          { icon: Users, label: "Meetings", path: "/meetings" }
+        );
+        break;
+      
+      case "project_manager":
+        items.push(
+          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+          { icon: AlertCircle, label: "Issues", path: "/issues" },
+          { icon: Users, label: "Meetings", path: "/meetings" }
+        );
+        break;
+      
+      case "project_officer":
+        items.push(
+          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" }
+        );
+        break;
+      
+      case "system_admin":
+        items.push(
+          { icon: Users, label: "User Management", path: "/user-management" }
+        );
+        break;
+    }
+
+    return items;
+  };
+
+  const navItems = getNavItems();
 
   return (
     <>
@@ -103,6 +130,18 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
                 {isOpen && <span>{item.label}</span>}
               </NavLink>
             ))}
+            
+            {/* Notifications for all roles except admin */}
+            {user?.role !== "system_admin" && (
+              <NavLink
+                to="/notifications"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted transition-smooth"
+                activeClassName="bg-primary/10 text-primary font-medium hover:bg-primary/15"
+              >
+                <Bell className="w-5 h-5 flex-shrink-0" />
+                {isOpen && <span>Notifications</span>}
+              </NavLink>
+            )}
           </nav>
 
           {/* User Info */}
