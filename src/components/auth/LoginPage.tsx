@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield } from 'lucide-react';
+// logo will be loaded from public/logo.png
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -60,8 +60,11 @@ const LoginPage = () => {
       <div className="w-full max-w-md">
         {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 mb-4">
-            <Shield className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-xl mb-4 overflow-hidden">
+            <img src="/logo.png" alt="PROVEN" className="w-full h-full object-contain" onError={(e) => {
+              const el = e.currentTarget as HTMLImageElement;
+              el.style.display = 'none';
+            }} />
           </div>
           <h1 className="text-3xl font-bold mb-2">PROVEN</h1>
           <p className="text-muted-foreground">Governance Platform for GRA</p>

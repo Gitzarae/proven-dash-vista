@@ -8,7 +8,6 @@ import {
   CheckCircle,
   BarChart3,
   ChevronLeft,
-  Shield,
   Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -101,9 +100,12 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           {/* Logo */}
           <div className="h-16 flex items-center justify-between px-4 border-b border-border">
             {isOpen && (
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-primary" />
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden">
+                  <img src="/logo.png" alt="PROVEN" className="w-full h-full object-contain" onError={(e) => {
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.style.display = 'none';
+                  }}/>
                 </div>
                 <span className="font-bold text-lg">PROVEN</span>
               </div>
