@@ -36,18 +36,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('user_id', userId)
         .single();
 
-      const { data: userRole } = await supabase
+      const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .limit(1);
+
+      if (rolesError) {
+        console.warn('Role fetch warning:', rolesError.message);
+      }
+
+      const role = rolesData && rolesData.length > 0 ? (rolesData[0].role as UserRole) : null;
 
       if (profile) {
         return {
           id: userId,
           email: profile.email,
           name: profile.full_name,
-          role: userRole?.role as UserRole || null
+          role,
         };
       }
       return null;

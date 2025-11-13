@@ -19,7 +19,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   // Role-based navigation items
   const getNavItems = () => {
@@ -37,6 +37,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: CheckCircle, label: "Decisions", path: "/decisions" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
           { icon: BarChart3, label: "Analytics", path: "/analytics" },
+          { icon: Bell, label: "Notifications", path: "/notifications" },
           { icon: Users, label: "Meetings", path: "/meetings" }
         );
         break;
@@ -46,7 +47,8 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: CheckCircle, label: "Decisions", path: "/decisions" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
-          { icon: Users, label: "Meetings", path: "/meetings" }
+          { icon: Users, label: "Meetings", path: "/meetings" },
+          { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
       
@@ -54,13 +56,15 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
-          { icon: Users, label: "Meetings", path: "/meetings" }
+          { icon: Users, label: "Meetings", path: "/meetings" },
+          { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
       
       case "project_officer":
         items.push(
-          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" }
+          { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+          { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
       
@@ -119,28 +123,24 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted transition-smooth"
-                activeClassName="bg-primary/10 text-primary font-medium hover:bg-primary/15"
-              >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
-                {isOpen && <span>{item.label}</span>}
-              </NavLink>
-            ))}
-            
-            {/* Notifications for all roles except admin */}
-            {user?.role !== "system_admin" && (
-              <NavLink
-                to="/notifications"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted transition-smooth"
-                activeClassName="bg-primary/10 text-primary font-medium hover:bg-primary/15"
-              >
-                <Bell className="w-5 h-5 flex-shrink-0" />
-                {isOpen && <span>Notifications</span>}
-              </NavLink>
+            {isLoading ? (
+              <div className="space-y-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-9 rounded-md bg-muted animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted transition-smooth"
+                  activeClassName="bg-primary/10 text-primary font-medium hover:bg-primary/15"
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  {isOpen && <span>{item.label}</span>}
+                </NavLink>
+              ))
             )}
           </nav>
 
