@@ -1,211 +1,145 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Users, Video, FileText, CheckCircle, Plus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Calendar, Plus, Video } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Meetings = () => {
-  const meetings = [
-    {
-      id: 'MTG-001',
-      title: 'Weekly Project Review',
-      project: 'Tax Modernization',
-      date: '2025-01-14',
-      time: '10:00 AM',
-      attendees: 8,
-      status: 'scheduled',
-      type: 'video',
-      agendaReady: true,
-      notesCaptured: false,
-      videoLink: 'https://meet.example.com/proj-001'
-    },
-    {
-      id: 'MTG-002',
-      title: 'Sprint Planning',
-      project: 'Digital Services',
-      date: '2025-01-16',
-      time: '2:00 PM',
-      attendees: 12,
-      status: 'scheduled',
-      type: 'in-person',
-      agendaReady: true,
-      notesCaptured: false
-    },
-    {
-      id: 'MTG-003',
-      title: 'Stakeholder Update',
-      project: 'Revenue Analytics',
-      date: '2025-01-12',
-      time: '9:00 AM',
-      attendees: 15,
-      status: 'completed',
-      type: 'hybrid',
-      agendaReady: true,
-      notesCaptured: true
-    },
-  ];
+  const { user } = useAuth();
+  const [meetings, setMeetings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({ title: '', description: '', scheduled_at: '', meeting_url: '', duration_minutes: 60 });
+
+  useEffect(() => {
+    fetchMeetings();
+  }, []);
+
+  const fetchMeetings = async () => {
+    try {
+      const { data, error } = await supabase.from('meetings').select('*').order('scheduled_at', { ascending: false });
+      if (error) throw error;
+      setMeetings(data || []);
+    } catch (error: any) {
+      toast.error('Failed to load meetings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreate = async () => {
+    if (!formData.title || !formData.scheduled_at) {
+      toast.error('Please fill required fields');
+      return;
+    }
+    try {
+      const { error } = await supabase.from('meetings').insert({ ...formData, organizer_id: user?.id });
+      if (error) throw error;
+      toast.success('Meeting scheduled');
+      setDialogOpen(false);
+      setFormData({ title: '', description: '', scheduled_at: '', meeting_url: '', duration_minutes: 60 });
+      fetchMeetings();
+    } catch (error: any) {
+      toast.error('Failed to create meeting');
+    }
+  };
 
   const stats = {
     scheduled: meetings.filter(m => m.status === 'scheduled').length,
-    video: meetings.filter(m => m.type === 'video' || m.type === 'hybrid').length,
-    agendas: meetings.filter(m => m.agendaReady).length,
-    notes: meetings.filter(m => m.notesCaptured).length,
+    completed: meetings.filter(m => m.status === 'completed').length,
+    total: meetings.length,
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Meetings</h1>
           <p className="text-muted-foreground mt-1">Schedule and manage review meetings</p>
         </div>
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Schedule Meeting
-            </Button>
+            <Button className="gap-2"><Plus className="w-4 h-4" />Schedule Meeting</Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>Schedule New Meeting</DialogTitle>
-              <DialogDescription>Create a new project review meeting</DialogDescription>
+              <DialogTitle>Schedule Meeting</DialogTitle>
+              <DialogDescription>Create a new meeting</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <Input placeholder="Meeting Title" />
-              <Input placeholder="Project" />
-              <Input type="date" placeholder="Date" />
-              <Input type="time" placeholder="Time" />
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Meeting Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="video">Video Conference</SelectItem>
-                  <SelectItem value="in-person">In-Person</SelectItem>
-                  <SelectItem value="hybrid">Hybrid</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input type="number" placeholder="Expected Attendees" />
-              <textarea 
-                className="w-full min-h-[100px] px-3 py-2 text-sm rounded-md border border-input bg-background"
-                placeholder="Agenda notes (optional - will be auto-generated)"
-              />
+              <Input placeholder="Title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+              <textarea className="w-full min-h-[100px] px-3 py-2 text-sm rounded-md border border-input bg-background" placeholder="Description" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+              <Input type="datetime-local" value={formData.scheduled_at} onChange={(e) => setFormData({...formData, scheduled_at: e.target.value})} />
+              <Input placeholder="Meeting URL (optional)" value={formData.meeting_url} onChange={(e) => setFormData({...formData, meeting_url: e.target.value})} />
+              <Input type="number" placeholder="Duration (minutes)" value={formData.duration_minutes} onChange={(e) => setFormData({...formData, duration_minutes: parseInt(e.target.value)})} />
               <div className="flex justify-end gap-2">
-                <Button variant="outline">Cancel</Button>
-                <Button>Schedule Meeting</Button>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleCreate}>Schedule</Button>
               </div>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <Calendar className="w-8 h-8 text-primary" />
             <span className="text-3xl font-bold">{stats.scheduled}</span>
           </div>
           <h3 className="font-semibold">Scheduled</h3>
-          <p className="text-sm text-muted-foreground">Upcoming meetings</p>
+          <p className="text-sm text-muted-foreground">Upcoming</p>
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
             <Video className="w-8 h-8 text-chart-4" />
-            <span className="text-3xl font-bold">{stats.video}</span>
+            <span className="text-3xl font-bold">{stats.completed}</span>
           </div>
-          <h3 className="font-semibold">Video Meetings</h3>
-          <p className="text-sm text-muted-foreground">With video link</p>
+          <h3 className="font-semibold">Completed</h3>
+          <p className="text-sm text-muted-foreground">Past</p>
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <FileText className="w-8 h-8 text-gra-gold" />
-            <span className="text-3xl font-bold">{stats.agendas}</span>
+            <Calendar className="w-8 h-8 text-gra-navy" />
+            <span className="text-3xl font-bold">{stats.total}</span>
           </div>
-          <h3 className="font-semibold">Agendas Generated</h3>
-          <p className="text-sm text-muted-foreground">Auto-generated</p>
-        </div>
-        <div className="glass-hover rounded-xl p-6">
-          <div className="flex items-center justify-between mb-2">
-            <CheckCircle className="w-8 h-8 text-gra-yellow" />
-            <span className="text-3xl font-bold">{stats.notes}</span>
-          </div>
-          <h3 className="font-semibold">Notes Captured</h3>
-          <p className="text-sm text-muted-foreground">With notes</p>
+          <h3 className="font-semibold">Total</h3>
+          <p className="text-sm text-muted-foreground">All</p>
         </div>
       </div>
 
-      {/* Meetings List */}
-      <div className="space-y-4">
-        {meetings.map((meeting) => (
-          <div key={meeting.id} className="glass-hover rounded-xl p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-2">{meeting.title}</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span>{meeting.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span>{meeting.time}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-muted-foreground" />
-                    <span>{meeting.attendees} attendees</span>
-                  </div>
-                  <div>
-                    <Badge variant="outline">{meeting.status}</Badge>
+      {loading ? (
+        <div className="text-center py-8">Loading...</div>
+      ) : meetings.length === 0 ? (
+        <div className="text-center py-8 text-muted-foreground">No meetings scheduled</div>
+      ) : (
+        <div className="space-y-4">
+          {meetings.map((meeting) => (
+            <div key={meeting.id} className="glass-hover rounded-xl p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2">{meeting.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{meeting.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge>{meeting.status}</Badge>
+                    <Badge variant="outline">{new Date(meeting.scheduled_at).toLocaleString()}</Badge>
+                    <Badge variant="outline">{meeting.duration_minutes} min</Badge>
                   </div>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge>{meeting.type}</Badge>
-                  {meeting.agendaReady && (
-                    <Badge variant="outline" className="border-gra-navy text-gra-navy">
-                      Agenda Ready
-                    </Badge>
-                  )}
-                  {meeting.notesCaptured && (
-                    <Badge variant="outline" className="border-gra-yellow text-gra-yellow">
-                      Notes Captured
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Project: {meeting.project}
-                </p>
               </div>
-            </div>
-            <div className="flex gap-2">
-              {(meeting.type === 'video' || meeting.type === 'hybrid') && meeting.status === 'scheduled' && (
-                <Button className="gap-2">
-                  <Video className="w-4 h-4" />
-                  Join Video
+              {meeting.meeting_url && meeting.status === 'scheduled' && (
+                <Button size="sm" className="gap-2" onClick={() => window.open(meeting.meeting_url, '_blank')}>
+                  <Video className="w-4 h-4" />Join
                 </Button>
               )}
-              <Button variant="outline">View Details</Button>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
