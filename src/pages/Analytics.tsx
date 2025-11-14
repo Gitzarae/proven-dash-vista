@@ -35,10 +35,10 @@ const Analytics = () => {
   ];
 
   const decisionData = [
-    { name: "Approved", value: 156, color: "hsl(var(--primary) / 0.85)" },
-    { name: "Pending", value: 42, color: "hsl(var(--primary) / 0.60)" },
-    { name: "Rejected", value: 8, color: "hsl(var(--primary) / 0.40)" },
-    { name: "Overdue", value: 12, color: "hsl(var(--primary) / 0.25)" },
+    { name: "Approved", value: 156, color: "hsl(var(--gra-navy))" },
+    { name: "Pending", value: 42, color: "hsl(var(--gra-yellow))" },
+    { name: "Rejected", value: 8, color: "hsl(var(--gra-gold))" },
+    { name: "Overdue", value: 12, color: "hsl(var(--gra-red))" },
   ];
 
   const deptData = [
@@ -71,6 +71,7 @@ const Analytics = () => {
           change="Target: 0.95"
           changeType="neutral"
           icon={TrendingUp}
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="Cost Performance"
@@ -78,6 +79,7 @@ const Analytics = () => {
           change="Target: 0.95"
           changeType="neutral"
           icon={BarChart3}
+          colorClass="text-primary"
         />
         <KPICard
           title="Decision Closure"
@@ -85,6 +87,7 @@ const Analytics = () => {
           change="On-time closure rate"
           changeType="neutral"
           icon={FileText}
+          colorClass="text-chart-4"
         />
         <KPICard
           title="SLA Compliance"
@@ -92,6 +95,7 @@ const Analytics = () => {
           change="Issue resolution SLA"
           changeType="neutral"
           icon={Calendar}
+          colorClass="text-gra-yellow"
         />
       </div>
 
@@ -127,14 +131,14 @@ const Analytics = () => {
                 <Line
                   type="monotone"
                   dataKey="spi"
-                  stroke="hsl(var(--primary) / 0.85)"
+                  stroke="hsl(var(--gra-navy))"
                   strokeWidth={2}
                   name="SPI"
                 />
                 <Line
                   type="monotone"
                   dataKey="cpi"
-                  stroke="hsl(var(--primary) / 0.45)"
+                  stroke="hsl(var(--gra-yellow))"
                   strokeWidth={2}
                   name="CPI"
                 />
@@ -161,7 +165,7 @@ const Analytics = () => {
                     borderRadius: "8px",
                   }}
                 />
-                <Bar dataKey="count" fill="hsl(var(--primary) / 0.45)" />
+                <Bar dataKey="count" fill="hsl(var(--gra-navy))" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -218,12 +222,12 @@ const Analytics = () => {
                 <Legend />
                 <Bar
                   dataKey="onTrack"
-                  fill="hsl(var(--primary) / 0.55)"
+                  fill="hsl(var(--gra-navy))"
                   name="On Track"
                 />
                 <Bar
                   dataKey="atRisk"
-                  fill="hsl(var(--primary) / 0.30)"
+                  fill="hsl(var(--gra-gold))"
                   name="At Risk"
                 />
               </BarChart>
