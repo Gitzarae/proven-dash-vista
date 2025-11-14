@@ -114,7 +114,7 @@ const Decisions = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <CheckCircle className="w-8 h-8 text-primary" />
+            <CheckCircle className="w-8 h-8 text-gra-yellow" />
             <span className="text-3xl font-bold">{stats.total}</span>
           </div>
           <h3 className="font-semibold">Total</h3>

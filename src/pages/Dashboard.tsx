@@ -123,7 +123,7 @@ const Dashboard = () => {
           change="+5% vs last month"
           changeType="positive"
           icon={TrendingUp}
-          colorClass="text-chart-4"
+          colorClass="text-gra-yellow"
         />
         <KPICard
           title="Pending Issues"

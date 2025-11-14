@@ -249,7 +249,7 @@ const Actions = () => {
         </div>
         <div className="glass-hover rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <Clock className="w-8 h-8 text-chart-4" />
+            <Clock className="w-8 h-8 text-gra-yellow" />
             <span className="text-3xl font-bold">{stats.inProgress}</span>
           </div>
           <h3 className="font-semibold">In Progress</h3>

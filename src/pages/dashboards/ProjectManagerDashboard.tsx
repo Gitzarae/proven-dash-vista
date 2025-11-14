@@ -61,7 +61,7 @@ const ProjectManagerDashboard = () => {
           change="This week"
           changeType="neutral"
           icon={Calendar}
-          colorClass="text-chart-4"
+          colorClass="text-gra-yellow"
         />
       </div>
 

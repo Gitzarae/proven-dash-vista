@@ -26,8 +26,8 @@ const KPICard = ({
           <p className="text-3xl font-medium text-foreground mb-2">{value}</p>
           {change && <p className="text-sm text-muted-foreground">{change}</p>}
         </div>
-        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-primary/10">
-          <Icon className="w-6 h-6 text-primary" />
+        <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center", colorClass.includes('gra-navy') ? 'bg-gra-navy/10' : colorClass.includes('gra-yellow') ? 'bg-gra-yellow/10' : 'bg-primary/10')}>
+          <Icon className={cn("w-6 h-6", colorClass)} />
         </div>
       </div>
     </div>

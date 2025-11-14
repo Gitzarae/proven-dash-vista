@@ -55,7 +55,7 @@ const ProjectOwnerDashboard = () => {
           change="Require attention"
           changeType="neutral"
           icon={AlertCircle}
-          colorClass="text-chart-4"
+          colorClass="text-gra-yellow"
         />
       </div>
 

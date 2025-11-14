@@ -21,10 +21,10 @@ const Analytics = () => {
   ];
 
   const decisionData = [
-    { name: 'Approved', value: 156, color: 'hsl(var(--primary) / 0.85)' },
-    { name: 'Pending', value: 42, color: 'hsl(var(--primary) / 0.60)' },
-    { name: 'Rejected', value: 8, color: 'hsl(var(--primary) / 0.40)' },
-    { name: 'Overdue', value: 12, color: 'hsl(var(--primary) / 0.25)' },
+    { name: 'Approved', value: 156, color: 'hsl(var(--gra-navy))' },
+    { name: 'Pending', value: 42, color: 'hsl(var(--gra-gold))' },
+    { name: 'Rejected', value: 8, color: 'hsl(var(--gra-red))' },
+    { name: 'Overdue', value: 12, color: 'hsl(var(--destructive))' },
   ];
 
   const deptData = [
@@ -49,10 +49,10 @@ const Analytics = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <KPICard title="Schedule Performance" value="0.92" change="Target: 0.95" changeType="neutral" icon={TrendingUp} />
-        <KPICard title="Cost Performance" value="0.94" change="Target: 0.95" changeType="neutral" icon={BarChart3} />
-        <KPICard title="Decision Closure" value="88%" change="On-time closure rate" changeType="neutral" icon={FileText} />
-        <KPICard title="SLA Compliance" value="82%" change="Issue resolution SLA" changeType="neutral" icon={Calendar} />
+        <KPICard title="Schedule Performance" value="0.92" change="Target: 0.95" changeType="neutral" icon={TrendingUp} colorClass="text-gra-navy" />
+        <KPICard title="Cost Performance" value="0.94" change="Target: 0.95" changeType="neutral" icon={BarChart3} colorClass="text-gra-navy" />
+        <KPICard title="Decision Closure" value="88%" change="On-time closure rate" changeType="neutral" icon={FileText} colorClass="text-gra-yellow" />
+        <KPICard title="SLA Compliance" value="82%" change="Issue resolution SLA" changeType="neutral" icon={Calendar} colorClass="text-gra-yellow" />
       </div>
 
       <Tabs defaultValue="performance" className="w-full">
@@ -73,8 +73,8 @@ const Analytics = () => {
                 <YAxis stroke="hsl(var(--muted-foreground))" />
                 <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
                 <Legend />
-                <Line type="monotone" dataKey="spi" stroke="hsl(var(--primary) / 0.85)" strokeWidth={2} name="SPI" />
-                <Line type="monotone" dataKey="cpi" stroke="hsl(var(--primary) / 0.45)" strokeWidth={2} name="CPI" />
+                <Line type="monotone" dataKey="spi" stroke="hsl(var(--gra-navy))" strokeWidth={2} name="SPI" />
+                <Line type="monotone" dataKey="cpi" stroke="hsl(var(--gra-gold))" strokeWidth={2} name="CPI" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -89,7 +89,7 @@ const Analytics = () => {
                 <XAxis dataKey="range" stroke="hsl(var(--muted-foreground))" />
                 <YAxis stroke="hsl(var(--muted-foreground))" />
                 <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
-                <Bar dataKey="count" fill="hsl(var(--primary) / 0.45)" />
+                <Bar dataKey="count" fill="hsl(var(--gra-navy))" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -119,8 +119,8 @@ const Analytics = () => {
                 <YAxis stroke="hsl(var(--muted-foreground))" />
                 <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
                 <Legend />
-                <Bar dataKey="onTrack" fill="hsl(var(--primary) / 0.55)" name="On Track" />
-                <Bar dataKey="atRisk" fill="hsl(var(--primary) / 0.30)" name="At Risk" />
+                <Bar dataKey="onTrack" fill="hsl(var(--gra-navy))" name="On Track" />
+                <Bar dataKey="atRisk" fill="hsl(var(--gra-gold))" name="At Risk" />
               </BarChart>
             </ResponsiveContainer>
           </div>

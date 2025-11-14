@@ -61,7 +61,7 @@ const AdminDashboard = () => {
           change="Active projects"
           changeType="neutral"
           icon={FolderKanban}
-          colorClass="text-chart-4"
+          colorClass="text-gra-navy"
         />
         <KPICard
           title="Audit Logs"
