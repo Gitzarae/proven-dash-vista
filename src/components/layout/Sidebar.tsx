@@ -9,6 +9,8 @@ import {
   BarChart3,
   ChevronLeft,
   Bell,
+  ListTodo,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +48,8 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: CheckCircle, label: "Decisions", path: "/decisions" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
+          { icon: ListTodo, label: "Actions", path: "/actions" },
+          { icon: FileText, label: "Documents", path: "/documents" },
           { icon: Users, label: "Meetings", path: "/meetings" },
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
@@ -55,6 +59,8 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
+          { icon: ListTodo, label: "Actions", path: "/actions" },
+          { icon: FileText, label: "Documents", path: "/documents" },
           { icon: Users, label: "Meetings", path: "/meetings" },
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
@@ -63,6 +69,8 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
       case "project_officer":
         items.push(
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
+          { icon: ListTodo, label: "Actions", path: "/actions" },
+          { icon: FileText, label: "Documents", path: "/documents" },
           { icon: Bell, label: "Notifications", path: "/notifications" }
         );
         break;
