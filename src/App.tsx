@@ -15,6 +15,8 @@ import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import Portfolio from "./pages/Portfolio";
 import Decisions from "./pages/Decisions";
 import Issues from "./pages/Issues";
+import Actions from "./pages/Actions";
+import Documents from "./pages/Documents";
 import Meetings from "./pages/Meetings";
 import Analytics from "./pages/Analytics";
 import Notifications from "./pages/Notifications";
@@ -64,6 +66,8 @@ const AppRoutes = () => {
         <Route path="portfolio" element={<Portfolio />} />
         <Route path="decisions" element={<Decisions />} />
         <Route path="issues" element={<Issues />} />
+        <Route path="actions" element={<Actions />} />
+        <Route path="documents" element={<Documents />} />
         <Route path="meetings" element={<Meetings />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="notifications" element={<Notifications />} />
