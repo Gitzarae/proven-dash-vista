@@ -85,7 +85,6 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
       case "system_admin":
         items.push(
-          {icon: Users,label: "User Management", path: "/user-management"},
           { icon: FolderKanban, label: "Portfolio", path: "/portfolio" },
           { icon: CheckCircle, label: "Decisions", path: "/decisions" },
           { icon: AlertCircle, label: "Issues", path: "/issues" },
@@ -93,7 +92,8 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           { icon: FileText, label: "Documents", path: "/documents" },
           { icon: Users, label: "Meetings", path: "/meetings" },
           { icon: BarChart3, label: "Analytics", path: "/analytics" },
-          { icon: Bell, label: "Notifications", path: "/notifications" }
+          { icon: Bell, label: "Notifications", path: "/notifications" },
+          {icon: Users,label: "User Management", path: "/user-management"},
         );
         break;
     }

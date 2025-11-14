@@ -128,8 +128,8 @@ const UserManagement = () => {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="glass-hover">
-              <Plus className="w-4 h-4 mr-2" />
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" />
               Add New User
             </Button>
           </DialogTrigger>

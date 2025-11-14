@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Calendar, Plus, Video } from 'lucide-react';
+import { Calendar, Plus, Video, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Meetings = () => {
@@ -45,6 +45,20 @@ const Meetings = () => {
       fetchMeetings();
     } catch (error: any) {
       toast.error('Failed to create meeting');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this meeting?')) {
+      return;
+    }
+    try {
+      const { error } = await supabase.from('meetings').delete().eq('id', id);
+      if (error) throw error;
+      toast.success('Meeting deleted');
+      fetchMeetings();
+    } catch (error: any) {
+      toast.error('Failed to delete meeting');
     }
   };
 
@@ -130,12 +144,22 @@ const Meetings = () => {
                     <Badge variant="outline">{meeting.duration_minutes} min</Badge>
                   </div>
                 </div>
-              </div>
-              {meeting.meeting_url && meeting.status === 'scheduled' && (
-                <Button size="sm" className="gap-2" onClick={() => window.open(meeting.meeting_url, '_blank')}>
-                  <Video className="w-4 h-4" />Join
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10" 
+                  onClick={() => handleDelete(meeting.id)}
+                >
+                  <Trash2 className="w-4 h-4" />
                 </Button>
-              )}
+              </div>
+              <div className="flex gap-2">
+                {meeting.meeting_url && meeting.status === 'scheduled' && (
+                  <Button size="sm" className="gap-2" onClick={() => window.open(meeting.meeting_url, '_blank')}>
+                    <Video className="w-4 h-4" />Join
+                  </Button>
+                )}
+              </div>
             </div>
           ))}
         </div>
