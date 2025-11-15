@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Plus, Edit, Save } from 'lucide-react';
+import { Search, Plus, Edit, Save, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Project {
@@ -45,13 +45,66 @@ const Portfolio = () => {
   const [isSummaryDialogOpen, setIsSummaryDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedProject, setEditedProject] = useState<Project | null>(null);
+  
+  // New project form state
+  const [projectName, setProjectName] = useState('');
+  const [executiveSponsor, setExecutiveSponsor] = useState('');
+  const [deliveryOwner, setDeliveryOwner] = useState('');
+  const [projectManager, setProjectManager] = useState('');
+  const [deliveryStatus, setDeliveryStatus] = useState('');
+  const [budget, setBudget] = useState('');
+  const [executiveSummary, setExecutiveSummary] = useState('');
 
   const handleCancel = () => {
     setIsDialogOpen(false);
     // Reset form fields
+    setProjectName('');
+    setExecutiveSponsor('');
+    setDeliveryOwner('');
+    setProjectManager('');
+    setDeliveryStatus('');
+    setBudget('');
+    setExecutiveSummary('');
     setMilestoneName('');
     setMilestoneStartDate('');
     setMilestoneEndDate('');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Add the new project to the projects array
+    setProjects(prevProjects => {
+      // Generate a new project ID based on current projects length
+      const newId = `PRJ-${String(prevProjects.length + 1).padStart(3, '0')}`;
+      
+      // Create new project object
+      const newProject: Project = {
+        id: newId,
+        name: projectName,
+        owner: deliveryOwner || executiveSponsor,
+        manager: projectManager,
+        status: deliveryStatus === 'on-track' ? 'On Track' : deliveryStatus === 'at-risk' ? 'At Risk' : 'On Track',
+        progress: 0, // New projects start at 0%
+        budget: {
+          spent: 0,
+          total: parseFloat(budget) || 0
+        },
+        issues: {
+          total: 0,
+          critical: 0
+        },
+        milestone: {
+          name: milestoneName || 'Project Kickoff',
+          date: milestoneEndDate || new Date().toISOString().split('T')[0]
+        }
+      };
+      
+      return [...prevProjects, newProject];
+    });
+    
+    // Close dialog and reset form
+    handleCancel();
   };
 
   const handleProjectClick = (project: Project) => {
@@ -85,6 +138,18 @@ const Portfolio = () => {
       setEditedProject({ ...selectedProject });
     }
     setIsEditMode(false);
+  };
+
+  const handleDelete = (projectId: string) => {
+    if (window.confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      setProjects(prevProjects => prevProjects.filter(p => p.id !== projectId));
+      // If the deleted project was selected, close the summary dialog
+      if (selectedProject?.id === projectId) {
+        setIsSummaryDialogOpen(false);
+        setSelectedProject(null);
+        setEditedProject(null);
+      }
+    }
   };
 
   const [projects, setProjects] = useState<Project[]>([
@@ -123,6 +188,39 @@ const Portfolio = () => {
     },
   ]);
 
+  // Filter and sort projects
+  const filteredAndSortedProjects = projects
+    .filter((project) => {
+      // Search filter - search by name, id, owner, or manager
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = 
+        !searchQuery ||
+        project.name.toLowerCase().includes(searchLower) ||
+        project.id.toLowerCase().includes(searchLower) ||
+        project.owner.toLowerCase().includes(searchLower) ||
+        project.manager.toLowerCase().includes(searchLower);
+      
+      // Status filter
+      const matchesStatus = 
+        statusFilter === 'all' ||
+        (statusFilter === 'on-track' && project.status === 'On Track') ||
+        (statusFilter === 'at-risk' && project.status === 'At Risk');
+      
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'progress':
+          return b.progress - a.progress;
+        case 'budget':
+          return b.budget.total - a.budget.total;
+        default:
+          return 0;
+      }
+    });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -156,29 +254,52 @@ const Portfolio = () => {
                   Enter project details to create a new programme
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 py-4 max-h-[80vh] overflow-y-auto">
+              <form onSubmit={handleSubmit} className="space-y-4 py-4 max-h-[80vh] overflow-y-auto">
                 <div className="space-y-2">
                   <Label htmlFor="project-name">Project Name</Label>
-                  <Input id="project-name" placeholder="Project Name" />
+                  <Input 
+                    id="project-name" 
+                    placeholder="Project Name" 
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="executive-sponsor">Executive Sponsor</Label>
-                    <Input id="executive-sponsor" placeholder="Executive Sponsor" />
+                    <Input 
+                      id="executive-sponsor" 
+                      placeholder="Executive Sponsor" 
+                      value={executiveSponsor}
+                      onChange={(e) => setExecutiveSponsor(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="delivery-owner">Delivery Owner</Label>
-                    <Input id="delivery-owner" placeholder="Delivery Owner" />
+                    <Input 
+                      id="delivery-owner" 
+                      placeholder="Delivery Owner" 
+                      value={deliveryOwner}
+                      onChange={(e) => setDeliveryOwner(e.target.value)}
+                      required
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="project-manager">Project Manager</Label>
-                    <Input id="project-manager" placeholder="Project Manager" />
+                    <Input 
+                      id="project-manager" 
+                      placeholder="Project Manager" 
+                      value={projectManager}
+                      onChange={(e) => setProjectManager(e.target.value)}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="delivery-status">Delivery Status</Label>
-                    <Select>
+                    <Select value={deliveryStatus} onValueChange={setDeliveryStatus}>
                       <SelectTrigger id="delivery-status">
                         <SelectValue placeholder="Delivery Status" />
                       </SelectTrigger>
@@ -225,7 +346,15 @@ const Portfolio = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="budget">Budget (GH₵)</Label>
-                    <Input id="budget" type="number" placeholder="Budget (GH₵)" />
+                    <Input 
+                      id="budget" 
+                      type="number" 
+                      placeholder="Budget (GH₵)" 
+                      value={budget}
+                      onChange={(e) => setBudget(e.target.value)}
+                      step="0.1"
+                      min="0"
+                    />
                   </div>
                   <div></div>
                 </div>
@@ -235,13 +364,15 @@ const Portfolio = () => {
                     id="executive-summary"
                     className="w-full min-h-[100px] px-3 py-2 text-sm rounded-md border border-input bg-background"
                     placeholder="Executive Summary"
+                    value={executiveSummary}
+                    onChange={(e) => setExecutiveSummary(e.target.value)}
                   />
                 </div>
                 <div className="flex justify-end gap-2 pt-2">
-                  <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-                  <Button>Submit</Button>
+                  <Button type="button" variant="outline" onClick={handleCancel}>Cancel</Button>
+                  <Button type="submit">Submit</Button>
                 </div>
-              </div>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
@@ -299,7 +430,7 @@ const Portfolio = () => {
               </tr>
             </thead>
             <tbody>
-              {projects.map((project) => (
+              {filteredAndSortedProjects.map((project) => (
                 <tr key={project.id} className="border-t border-border hover:bg-muted/30 transition-smooth">
                   <td className="py-4 px-6">
                     <div 
@@ -582,28 +713,38 @@ const Portfolio = () => {
                 </>
               )}
               
-              <div className="flex justify-end gap-2 pt-4 border-t">
-                {!isEditMode ? (
-                  <>
-                    <Button variant="outline" onClick={() => setIsSummaryDialogOpen(false)}>
-                      Close
-                    </Button>
-                    <Button onClick={handleEdit} className="gap-2">
-                      <Edit className="w-4 h-4" />
-                      Edit
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="outline" onClick={handleCancelEdit}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleSave} className="gap-2">
-                      <Save className="w-4 h-4" />
-                      Save
-                    </Button>
-                  </>
-                )}
+              <div className="flex justify-between items-center pt-4 border-t">
+                <Button 
+                  variant="outline" 
+                  onClick={() => selectedProject && handleDelete(selectedProject.id)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </Button>
+                <div className="flex gap-2">
+                  {!isEditMode ? (
+                    <>
+                      <Button variant="outline" onClick={() => setIsSummaryDialogOpen(false)}>
+                        Close
+                      </Button>
+                      <Button onClick={handleEdit} className="gap-2">
+                        <Edit className="w-4 h-4" />
+                        Edit
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" onClick={handleCancelEdit}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSave} className="gap-2">
+                        <Save className="w-4 h-4" />
+                        Save
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           )}
